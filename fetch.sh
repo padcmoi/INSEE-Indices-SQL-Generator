@@ -22,9 +22,11 @@ fi
 mkdir -p "$EXPORT_DIR"
 
 declare -A INDICES=(
-  [IRL]="001515333"
-  [ILC]="001532540"
-  [ILAT]="001532541"
+  [IRL]="001515333"        # France métropolitaine
+  [IRL-CORSE]="010760507"  # Collectivité de Corse
+  [IRL-DOM]="010760509"    # Collectivités d’Outre-mer (régies par l’article 73)
+  [ILC]="001532540"        # Loyers commerciaux
+  [ILAT]="001532541"       # Loyers activités tertiaires
 )
 
 for CODE in "${!INDICES[@]}"; do
