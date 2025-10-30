@@ -66,11 +66,17 @@ for YEAR in "${YEARS[@]}"; do
     [[ -z "$VAL" ]] && continue
 
     PREV_KEY="$((YEAR-1))-${TRI}"
+    VAR="NULL"
+    # HOTFIXES: avoid division by zero, inf or nan
     if [[ -n "${VALS[$PREV_KEY]:-}" ]]; then
       PREV_VAL="${VALS[$PREV_KEY]}"
-      VAR=$(awk -v a="$VAL" -v b="$PREV_VAL" 'BEGIN { printf "%.2f", ((a - b) / b) * 100 }')
-    else
-      VAR="NULL"
+      VAR=$(awk -v a="$VAL" -v b="$PREV_VAL" '
+        BEGIN {
+          if (b == 0) { print "0.00"; exit }
+          diff = ((a - b) / b) * 100
+          if (diff == "inf" || diff == "-inf" || diff != diff) { diff = 0.00 }
+          printf "%.2f", diff
+        }')
     fi
 
     case "$DB_TYPE" in
